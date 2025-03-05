@@ -1,7 +1,8 @@
-version: "3.8"
 services:
   backend:
-    build: ./kennel_manager_backend
+    build:
+      context: ./kennel_manager_backend
+      dockerfile: Dockerfile
     ports:
       - "8000:8000"
     depends_on:
@@ -14,14 +15,16 @@ services:
       - DATABASE_PORT=5432
 
   frontend:
-    build: ./kennel_manager_frontend
+    build:
+      context: ./kennel_manager_frontend
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     environment:
       - VITE_API_BASE_URL=http://localhost:8000/api
 
   db:
-    image: postgres:13
+    image: postgres:latest
     environment:
       POSTGRES_DB: kennel_db
       POSTGRES_USER: kennel_user

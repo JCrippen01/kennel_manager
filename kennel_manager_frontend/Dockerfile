@@ -1,5 +1,4 @@
-# Dockerfile for React frontend with Vite
-FROM node:16-alpine
+FROM node:18
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
