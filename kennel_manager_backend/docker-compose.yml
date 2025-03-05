@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   backend:
-    build: .
+    build: ./kennel_manager_backend
     ports:
       - "8000:8000"
     depends_on:
@@ -13,6 +13,13 @@ services:
       - DATABASE_HOST=db
       - DATABASE_PORT=5432
 
+  frontend:
+    build: ./kennel_manager_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8000/api
+
   db:
     image: postgres:13
     environment:
@@ -20,4 +27,4 @@ services:
       POSTGRES_USER: kennel_user
       POSTGRES_PASSWORD: password
     ports:
-      - "5432:5432"
+      - "5433:5432"  # Changed from 5432 to 5433 to avoid conflicts
