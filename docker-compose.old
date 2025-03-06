@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: kennel_db
+      POSTGRES_USER: kennel_user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - kennel-network
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_NAME=kennel_db
+      - DATABASE_USER=kennel_user
+      - DATABASE_PASSWORD=password
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5433
+    depends_on:
+      - db
+    networks:
+      - kennel-network
+
+networks:
+  kennel-network:
+
+volumes:
+  postgres_data:

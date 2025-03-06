@@ -1,3 +1,5 @@
+
+
 services:
   backend:
     build:
@@ -12,7 +14,9 @@ services:
       - DATABASE_USER=kennel_user
       - DATABASE_PASSWORD=password
       - DATABASE_HOST=db
-      - DATABASE_PORT=5432
+      - DATABASE_PORT=5432  # Use default port 5432
+    networks:
+      - kennel-network
 
   frontend:
     build:
@@ -22,6 +26,8 @@ services:
       - "3000:3000"
     environment:
       - VITE_API_BASE_URL=http://localhost:8000/api
+    networks:
+      - kennel-network
 
   db:
     image: postgres:latest
@@ -30,4 +36,14 @@ services:
       POSTGRES_USER: kennel_user
       POSTGRES_PASSWORD: password
     ports:
-      - "5433:5432"  # Changed from 5432 to 5433 to avoid conflicts
+      - "5454:5432"  # Map default port 5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - kennel-network
+
+networks:
+  kennel-network:
+
+volumes:
+  postgres_data:
