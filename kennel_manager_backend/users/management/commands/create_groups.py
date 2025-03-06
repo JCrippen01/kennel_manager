@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
-from users.models import Kennel
+from users.models import User  # Adjust the import based on your model's location
 
 
 class Command(BaseCommand):
@@ -19,7 +19,7 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS("Admin group created"))
 
         # Assign permissions to admin group
-        content_type = ContentType.objects.get_for_model(Kennel)
+        content_type = ContentType.objects.get_for_model(User)
         permissions = Permission.objects.filter(content_type=content_type)
         admin_group.permissions.set(permissions)
 
