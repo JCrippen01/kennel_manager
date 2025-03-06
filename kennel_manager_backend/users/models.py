@@ -1,9 +1,8 @@
+from django.contrib.auth.models import AbstractUser, Group
 from django.db import models
 
 
-class User(models.Model):
-    username = models.CharField(max_length=100)
-    email = models.EmailField()
-
+class User(AbstractUser):
+    # Custom fields can be added here if needed
     def __str__(self):
         return self.username

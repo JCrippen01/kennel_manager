@@ -60,7 +60,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "kennel_manager.wsgi.application"
-
+AUTH_USER_MODEL = "app_name.User"
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
