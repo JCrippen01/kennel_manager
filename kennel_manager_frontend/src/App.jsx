@@ -1,19 +1,21 @@
-import React from 'react';
-import { Container, Typography, Button } from '@mui/material';
-import UserList from './components/UserList';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Register from './components/Register';
+import Login from './components/Login';
+import Dashboard from './components/Dashboard';
 
-function App() {
-  return (
-    <Container>
-      <Typography variant="h2" gutterBottom>
-        Kennel Manager Frontend
-      </Typography>
-      <Button variant="contained" color="primary">
-        Get Started
-      </Button>
-      <UserList />
-    </Container>
-  );
-}
+const App = () => {
+    const [authTokens, setAuthTokens] = useState(null);
+
+    return (
+        <Router>
+            <Routes>
+                <Route path="/register" element={<Register />} />
+                <Route path="/login" element={<Login setAuthTokens={setAuthTokens} />} />
+                <Route path="/dashboard" element={<Dashboard authTokens={authTokens} />} />
+            </Routes>
+        </Router>
+    );
+};
 
 export default App;
