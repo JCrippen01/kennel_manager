@@ -26,10 +26,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "users",
     "rest_framework",
     "rest_framework_simplejwt",
-    "users",
 ]
+AUTH_USER_MODEL = "users.User"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -60,7 +61,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "kennel_manager.wsgi.application"
-AUTH_USER_MODEL = "users.User"
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
