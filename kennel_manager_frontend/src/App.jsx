@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Register from './components/Register';
-import Login from './components/Login';
-import Dashboard from './components/Dashboard';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./components/Home.jsx";
+import Register from "./components/Register.jsx";
+import Login from "./components/Login.jsx";
+import Dashboard from "./components/Dashboard.jsx";
 
 const App = () => {
-    const [authTokens, setAuthTokens] = useState(null);
-
-    return (
-        <Router>
-            <Routes>
-                <Route path="/register" element={<Register />} />
-                <Route path="/login" element={<Login setAuthTokens={setAuthTokens} />} />
-                <Route path="/dashboard" element={<Dashboard authTokens={authTokens} />} />
-            </Routes>
-        </Router>
-    );
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
+    </Router>
+  );
 };
 
 export default App;

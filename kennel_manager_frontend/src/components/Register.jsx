@@ -1,35 +1,38 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { TextField, Button, Container, Typography } from '@mui/material';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Container, TextField, Button, Card, CardContent, Typography } from "@mui/material";
+import api from "../services/api.js";
 
 const Register = () => {
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [message, setMessage] = useState('');
+  const [formData, setFormData] = useState({ username: "", password: "" });
+  const navigate = useNavigate();
 
-    const handleRegister = async (e) => {
-        e.preventDefault();
-        try {
-            await axios.post('http://localhost:8000/api/register/', { username, email, password });
-            setMessage('Registration successful.');
-        } catch (error) {
-            setMessage('Registration failed.');
-        }
-    };
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-    return (
-        <Container>
-            <Typography variant="h4">Register</Typography>
-            <form onSubmit={handleRegister}>
-                <TextField label="Username" value={username} onChange={(e) => setUsername(e.target.value)} fullWidth margin="normal" />
-                <TextField label="Email" value={email} onChange={(e) => setEmail(e.target.value)} fullWidth margin="normal" />
-                <TextField label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} fullWidth margin="normal" />
-                <Button type="submit" variant="contained" color="primary">Register</Button>
-            </form>
-            {message && <Typography>{message}</Typography>}
-        </Container>
-    );
+  const handleSubmit = async () => {
+    try {
+      await api.post("/register/", formData);
+      alert("Registration successful!");
+      navigate("/login");
+    } catch (error) {
+      alert("Registration failed");
+    }
+  };
+
+  return (
+    <Container>
+      <Card>
+        <CardContent>
+          <Typography variant="h5">Register</Typography>
+          <TextField label="Username" name="username" fullWidth margin="normal" onChange={handleChange} />
+          <TextField label="Password" type="password" name="password" fullWidth margin="normal" onChange={handleChange} />
+          <Button variant="contained" color="primary" onClick={handleSubmit}>Submit</Button>
+        </CardContent>
+      </Card>
+    </Container>
+  );
 };
 
 export default Register;
