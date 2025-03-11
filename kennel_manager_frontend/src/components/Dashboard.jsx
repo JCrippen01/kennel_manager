@@ -1,15 +1,23 @@
-import React from "react";
-import { Container, Typography } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-
-const columns = [{ field: "id", headerName: "ID", width: 90 }, { field: "message", headerName: "Message", width: 300 }];
-const rows = [{ id: 1, message: "Hello, World" }];
+import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
+import { Button, Container, Typography } from "@mui/material";
 
 const Dashboard = () => {
+  const { user, logout } = useContext(AuthContext);
+  const navigate = useNavigate(); // Get navigate from Router context
+
   return (
     <Container>
-      <Typography variant="h4">Dashboard</Typography>
-      <DataGrid rows={rows} columns={columns} pageSize={5} />
+      <Typography variant="h4">Welcome, {user}!</Typography>
+      <Button 
+        variant="contained" 
+        color="secondary" 
+        onClick={() => logout(navigate)}  // Pass navigate to logout
+        style={{ marginTop: "20px" }}
+      >
+        Logout
+      </Button>
     </Container>
   );
 };
