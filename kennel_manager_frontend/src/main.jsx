@@ -5,9 +5,11 @@ import { AuthProvider } from "./context/AuthContext";
 import AppRouter from "./router";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <BrowserRouter>
-    <AuthProvider>
-      <AppRouter />
-    </AuthProvider>
-  </BrowserRouter>
+  <React.StrictMode>
+    <BrowserRouter>
+      <AuthProvider>
+        <AppRouter />
+      </AuthProvider>
+    </BrowserRouter>
+  </React.StrictMode>
 );

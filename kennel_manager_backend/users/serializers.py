@@ -44,8 +44,9 @@ class RegisterSerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
-        """Create user with hashed password"""
-        return User.objects.create_user(**validated_data)
+        """Create user with hashed password but keep inactive until email verified"""
+        user = User.objects.create_user(**validated_data, is_active=False)
+        return user
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -92,3 +93,45 @@ class UserProfileSerializer(serializers.ModelSerializer):
             instance.set_password(validated_data.pop("new_password"))
 
         return super().update(instance, validated_data)
+
+
+# ✅ Email Verification Serializer
+class EmailVerificationSerializer(serializers.Serializer):
+    """Serializer for verifying user email"""
+
+    email = serializers.EmailField()
+
+    def validate_email(self, value):
+        """Check if user with this email exists"""
+        if not User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("No user found with this email.")
+        return value
+
+
+# ✅ Password Reset Request Serializer
+class PasswordResetRequestSerializer(serializers.Serializer):
+    """Serializer for requesting a password reset email"""
+
+    email = serializers.EmailField()
+
+    def validate_email(self, value):
+        """Check if user exists before sending reset link"""
+        if not User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("No user found with this email.")
+        return value
+
+
+# ✅ Password Reset Serializer
+class PasswordResetSerializer(serializers.Serializer):
+    """Serializer for resetting user password"""
+
+    new_password = serializers.CharField(write_only=True, min_length=8)
+    confirm_password = serializers.CharField(write_only=True, min_length=8)
+
+    def validate(self, data):
+        """Ensure both passwords match"""
+        if data["new_password"] != data["confirm_password"]:
+            raise serializers.ValidationError(
+                {"confirm_password": "Passwords do not match."}
+            )
+        return data

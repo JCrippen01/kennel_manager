@@ -11,6 +11,7 @@ from .views import (
     list_users,
     update_user_role,
     delete_user,
+    verify_email,
 )
 
 urlpatterns = [
@@ -26,4 +27,5 @@ urlpatterns = [
     path("", list_users, name="list-users"),
     path("<int:user_id>/", update_user_role, name="update-user-role"),
     path("<int:user_id>/delete/", delete_user, name="delete-user"),
+    path("verify/<uidb64>/<token>/", verify_email, name="verify-email"),
 ]

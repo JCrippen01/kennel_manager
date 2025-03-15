@@ -1,5 +1,9 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+# ✅ Load environment variables from .env file
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -12,6 +16,7 @@ DEBUG = os.getenv("DEBUG", "True") == "True"
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
 
 INSTALLED_APPS = [
+    "corsheaders",  # ✅ Ensure corsheaders is installed
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -22,15 +27,14 @@ INSTALLED_APPS = [
     "dogs",
     "rest_framework",
     "rest_framework_simplejwt",
-    "corsheaders",
 ]
 
 AUTH_USER_MODEL = "users.CustomUser"
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",  # ✅ MUST BE AT THE TOP
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -77,17 +81,11 @@ REST_FRAMEWORK = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
     },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
 LANGUAGE_CODE = "en-us"
@@ -102,5 +100,45 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-CORS_ALLOW_ALL_ORIGINS = True
+# ✅ CORS CONFIGURATION (ENSURE FRONTEND CAN ACCESS API)
+CORS_ALLOW_ALL_ORIGINS = True  # ✅ Allow all during testing
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Frontend React App
+    "http://127.0.0.1:3000",
+]
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
+
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS",
+]
+CORS_ALLOW_HEADERS = [
+    "authorization",
+    "content-type",
+    "x-csrftoken",
+    "accept",
+    "origin",
+    "user-agent",
+    "x-requested-with",
+]
+
+# ✅ EMAIL CONFIGURATION
+EMAIL_BACKEND = os.getenv(
+    "EMAIL_BACKEND", "django.core.mail.backends.smtp.EmailBackend"
+)
+EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.gmail.com")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "True") == "True"
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = os.getenv(
+    "DEFAULT_FROM_EMAIL", "Kennel Manager <mr.wiggles.boarding@gmail.com>"
+)

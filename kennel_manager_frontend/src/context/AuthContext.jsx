@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import api from "../services/api";
 
 export const AuthContext = createContext();
@@ -7,17 +7,23 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const accessToken = localStorage.getItem("access");
     const username = localStorage.getItem("username");
-    if (token && username) setUser(username);
+
+    if (accessToken && username) {
+      setUser({ username });
+    }
   }, []);
 
   const login = async (username, password) => {
     try {
       const response = await api.post("users/login/", { username, password });
-      localStorage.setItem("token", response.data.token);
+
+      localStorage.setItem("access", response.data.access);
+      localStorage.setItem("refresh", response.data.refresh);
       localStorage.setItem("username", response.data.username);
-      setUser(response.data.username);
+
+      setUser({ username: response.data.username });
       return true;
     } catch (error) {
       console.error("Login failed:", error);
@@ -26,10 +32,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = (navigate) => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
     localStorage.removeItem("username");
     setUser(null);
-    navigate("/login"); // Redirect after logout
+    navigate("/login");
   };
 
   return (
@@ -38,3 +45,6 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+// ✅ Create a custom hook to use the AuthContext
+export const useAuth = () => useContext(AuthContext);
